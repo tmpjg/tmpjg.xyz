@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>VPC on Jeronimo Gonzalez [tmpjg]</title>
+    <link>http://localhost:1313/en/tags/vpc/</link>
+    <description>Recent content in VPC on Jeronimo Gonzalez [tmpjg]</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 30 Sep 2024 18:55:59 -0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/en/tags/vpc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>EKS and Overcoming Node IP Limits by Configuring the VPC CNI Plugin</title>
+      <link>http://localhost:1313/en/posts/eks-vpc-cni/</link>
+      <pubDate>Mon, 30 Sep 2024 18:55:59 -0300</pubDate>
+      <guid>http://localhost:1313/en/posts/eks-vpc-cni/</guid>
+      <description>How to overcome the IP limit imposed by AWS on EKS?</description>
+    </item>
+  </channel>
+</rss>

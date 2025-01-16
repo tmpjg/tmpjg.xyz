@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Trabajo on Jeronimo Gonzalez [tmpjg]</title>
+    <link>https://tmpjg.xyz/tags/trabajo/</link>
+    <description>Recent content in Trabajo on Jeronimo Gonzalez [tmpjg]</description>
+    <generator>Hugo</generator>
+    <language>es</language>
+    <lastBuildDate>Mon, 02 Dec 2024 19:24:49 -0300</lastBuildDate>
+    <atom:link href="https://tmpjg.xyz/tags/trabajo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Slapd (meta backend openldap) y Google Workspace</title>
+      <link>https://tmpjg.xyz/posts/slapd-y-google-workspace/</link>
+      <pubDate>Mon, 02 Dec 2024 19:24:49 -0300</pubDate>
+      <guid>https://tmpjg.xyz/posts/slapd-y-google-workspace/</guid>
+      <description>Organizar un directorio LDAP en Google Workspace con Slapd (meta backend openldap)</description>
+    </item>
+  </channel>
+</rss>

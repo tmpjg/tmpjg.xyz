@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>It on Jeronimo Gonzalez [tmpjg]</title>
+    <link>http://localhost:1313/en/tags/it/</link>
+    <description>Recent content in It on Jeronimo Gonzalez [tmpjg]</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 02 Dec 2024 19:24:49 -0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/en/tags/it/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Slapd (meta backend openldap) and Google Workspace</title>
+      <link>http://localhost:1313/en/posts/slapd-and-google-workspace/</link>
+      <pubDate>Mon, 02 Dec 2024 19:24:49 -0300</pubDate>
+      <guid>http://localhost:1313/en/posts/slapd-and-google-workspace/</guid>
+      <description>Organizing an LDAP directory in Google Workspace with Slapd (meta backend openldap)</description>
+    </item>
+  </channel>
+</rss>

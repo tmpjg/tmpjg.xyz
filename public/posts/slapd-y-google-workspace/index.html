@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es"
+  dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+
+
+<link rel="icon" type="image/ico" href="https://tmpjg.xyz//favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://tmpjg.xyz//favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://tmpjg.xyz//favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="https://tmpjg.xyz//android-chrome-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://tmpjg.xyz//apple-touch-icon.png">
+
+<meta name="description" content=""/>
+
+<title>
+    
+    Slapd (meta backend openldap) y Google Workspace | Jeronimo Gonzalez [tmpjg]
+    
+</title>
+
+<link rel="canonical" href="https://tmpjg.xyz/posts/slapd-y-google-workspace/"/>
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/assets/combined.min.a6824bbee0d90d5af09fed9b70395ce7076b615e315037455d903314e96ef91b.css" media="all">
+
+
+
+
+
+
+
+
+
+  </head>
+
+  
+
+  
+  
+  
+
+  <body class="dark">
+
+    <div class="content">
+      <header>
+        
+
+<div class="header">
+
+    
+
+    <h1 class="header-title">Jeronimo Gonzalez [tmpjg]</h1>
+
+    <div class="flex">
+        
+
+        
+        
+      
+        <p class="small ">
+            <a href="/" >
+                /home
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/posts" >
+                /posts
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/about" >
+                /about
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/tags" >
+                /tags
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/en" >
+                /(en)
+            </a>
+        </p>
+        
+        
+    </div>
+
+    
+
+</div>
+
+      </header>
+
+      <main class="main">
+        
+
+
+
+
+
+<div class="breadcrumbs">
+    
+    <a href="/">Home</a>
+    <span class="breadcrumbs-separator"> > </span>
+    
+    <a href="/posts/">Posts</a>
+    <span class="breadcrumbs-separator"> > </span>
+    
+    <a class="breadcrumbs-current" href="/posts/slapd-y-google-workspace/">Slapd (meta backend openldap) y Google Workspace</a>
+</div>
+
+
+
+<div >
+
+  <div class="single-intro-container">
+
+    
+
+    <h1 class="single-title">Slapd (meta backend openldap) y Google Workspace</h1>
+    
+    <p class="single-summary">Organizar un directorio LDAP en Google Workspace con Slapd (meta backend openldap)</p>
+    
+
+    
+
+    <p class="single-readtime">
+      
+      
+      
+      <time datetime="2024-12-02T19:24:49-03:00">2 de diciembre de 2024</time>
+      
+
+      
+    </p>
+
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  <div class="single-content">
+    <p>Si llegaste buscando información sobre <a href="https://es.wikipedia.org/wiki/OpenLDAP"><strong>OpenLDAP</strong></a>, <a href="https://www.openldap.org/software/man.cgi?query=slapd"><strong>Slapd</strong></a> y su backend <a href="https://linux.die.net/man/5/slapd-meta"><strong>meta</strong></a>, supongo que te topaste con uno de esos recovecos oscuros que se encuentran en toda infraestructura, robusto como un golem de barro y con una &ldquo;completa&rdquo; y críptica documentación que es la única defensa contra la ausencia de posteos de la comunidad con una antigüedad menor a los 10 años.</p>
+<p>La idea de Slapd es funcionar como una interfaz LDAP que responde diferentes backends LDAP unificados y , en caso de ser necesario, reescritos. Por ejemplo, en mi caso la necesidad surgió por mantener diferentes dominios dentro del LDAP de <strong>Google Workspace</strong> (GW). En este caso, el dominio principal era <code>example.com</code> , pero también dentro de la misma cuenta de google mantenía algunos usuarios con correos que tenían dominio <code>example.it</code> o <code>example.com.es</code>. Ademas de esto estos usuarios dentro de estos dominios correspondían a Unidades Organizativas de GW. Los bindpaths originales para hacer una búsqueda en google de usuarios en estos dominios seria:</p>
+<ul>
+<li><code>ou=officeA,ou=Users,dc=example,dc=com</code></li>
+<li><code>ou=officeB,ou=Users,dc=example,dc=it</code></li>
+<li><code>ou=officeC,ou=Users,dc=example,dc=com,dc=es</code></li>
+</ul>
+<p>En las aplicaciones como por ejemplo <strong>Gitlab</strong>, cuando nos conectamos a un LDAP, tenemos que establecer un bindpath de busqueda y este es fijo y unico. Teniendo en cuenta que <strong>todos los clientes de LDAP leen estos paths de derecha a izquierda</strong> era necesario deshacerse de los TLD (.com, .it, .com.es).</p>
+<p>En este caso utilice un <em>Debian 12</em>  para instalar el servidor de slapd que serviría como proxy entre los clientes y el LDAP de Google Workspace.</p>
+<p>Instalamos los paquetes necesarios y creamos la estructura de directorios:</p>
+<pre tabindex="0"><code>apt install slapd # nos va a pedir una password de manager que no usaremos luego.
+mkdir -p /ldapcerts/ca 
+</code></pre><p>Dentro de <code>/ldapcerts</code> colocaremos los certificados del cliente LDAP (<code>example_slapd.key</code> y <code>example_slapd.crt</code>) de Google Workspace y dentro de <code>/ldapcerts/ca</code> los certificados de Google (<a href="https://pki.goog/repository/">https://pki.goog/repository/</a>) (con uno solo es suficiente)</p>
+<p>El servicio de <em>slapd</em> que se implementa por defecto en <em>debian 12</em> y la version actual, por lo poco que pude encontrar en internet, tienen el problema de no reconocer las variables <code>tls_</code> que son necesarias para autenticar con el LDAP de Google Workspace (<a href="https://www.openldap.org/lists/openldap-technical/201302/msg00003.html%29">https://www.openldap.org/lists/openldap-technical/201302/msg00003.html)</a>, por lo que es necesario crear un nuevo script de inicio que se ejecute utilizando estas variables.</p>
+<p>Creamos el script <code>/etc/ldap/start-slapd.sh</code> con permisos de ejecucion y con el siguiente contenido:</p>
+<pre tabindex="0"><code>#!/bin/bash 
+
+
+LDAPTLS_CERT=&#34;/ldapcerts/example_slapd.crt&#34; LDAPTLS_KEY=&#34;/ldapcerts/example_slapd.key&#34; LDAPTLS_CACERT=&#34;/ldapcerts/ca/r1.pem&#34; LDAPTLS_CACERTDOR=&#34;/etc/ssl/certs&#34; /usr/sbin/slapd -h ldap://:389/ -f /etc/ldap/slapd.conf -d1 
+</code></pre><p>(Recomiendo cambiar el puerto por defecto para no exponer demasiado nuestro LDAP)</p>
+<p>Luego creamos el archivo <code>/lib/systemd/system/slapd-custom.service</code> con el siguiente contenido:</p>
+<pre tabindex="0"><code>[Unit]
+Description=slapd custom
+
+[Service]
+ExecStart=/etc/ldap/start-slapd.sh
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+</code></pre><p>Desactivamos el servicio original de slapd:</p>
+<pre tabindex="0"><code>systemctl disable slapd
+</code></pre><p>Activamos el nuevo:</p>
+<pre tabindex="0"><code>systemctl enable slapd-custom
+</code></pre><p>Y por ultimo creamos el archivo <code>/etc/ldap/slapd.conf</code> que contiene toda la configuración del backend:</p>
+<pre tabindex="0"><code>include /etc/ldap/schema/core.schema
+include /etc/ldap/schema/cosine.schema
+include /etc/ldap/schema/inetorgperson.schema
+include /etc/ldap/schema/nis.schema
+
+
+modulepath 	/usr/lib/ldap
+moduleload 	back_meta.la
+moduleload  back_ldap.la
+moduleload	rwm.la
+
+database meta
+
+suffix	&#34;dc=example&#34;
+rootdn	&#34;cn=slapd,dc=example&#34;
+rootpw  &#34;&lt;password_segura&gt;&#34;
+
+
+rebind-as-user yes
+
+## example.com 
+uri             &#34;ldaps://ldap.google.com/ou=officeA,ou=Users,dc=example&#34;
+suffixmassage   &#34;ou=officeA,ou=Users,dc=example&#34; &#34;ou=officeA,ou=Users,dc=example,dc=com&#34;
+lastmod  off
+readonly on
+timeout 360
+idassert-bind   bindmethod=sasl
+	       saslmech=external
+	       flags=override
+	       tls_cert=/ldapcerts/example_slapd.crt 
+	       tls_key=/ldapcerts/example_slapd.key 
+	       tls_cacert=/ldapcerts/ca/r1.pem 
+	       tls_cacertdir=/etc/ssl/certs
+
+## example.it 
+uri             &#34;ldaps://ldap.google.com/ou=officeB,ou=Users,dc=example&#34;
+suffixmassage   &#34;ou=officeB,ou=Users,dc=example&#34; &#34;ou=officeB,ou=Users,dc=example,dc=it&#34;
+lastmod  off
+readonly on
+timeout 360
+idassert-bind   bindmethod=sasl
+	       saslmech=external
+	       flags=override
+	       tls_cert=/ldapcerts/example_slapd.crt 
+	       tls_key=/ldapcerts/example_slapd.key 
+	       tls_cacert=/ldapcerts/ca/r1.pem 
+	       tls_cacertdir=/etc/ssl/certs
+
+## example.com.es
+uri             &#34;ldaps://ldap.google.com/ou=officeC,ou=Users,dc=example&#34;
+suffixmassage   &#34;ou=officeC,ou=Users,dc=example&#34; &#34;ou=officeC,ou=Users,dc=example,dc=com,dc=es&#34;
+lastmod  off
+readonly on
+timeout 360
+idassert-bind   bindmethod=sasl
+	       saslmech=external
+	       flags=override
+	       tls_cert=/ldapcerts/example_slapd.crt 
+	       tls_key=/ldapcerts/example_slapd.key 
+	       tls_cacert=/ldapcerts/ca/r1.pem 
+	       tls_cacertdir=/etc/ssl/certs
+
+
+#### re-escritura de atributos
+
+#overlay rwm
+#rwm-map attribute uid usuario
+</code></pre><p>(En mi caso no utilizo ninguna re-escritura <code>rwm</code> pero dejo las opciones comentadas por si son útiles.)</p>
+<p>Mi consejo es reiniciar el equipo para asegurarnos de que el script inicie correctamente por si solo, pero en caso de no poder hacerlo es necesario matar el proceso anterior de slapd que se inicia automáticamente cuando lo instalamos y ejecutar manualmente <code>systemctl start slapd</code>.</p>
+<p>A esta altura ya podemos hacer consultas con un bindpath que solamente es <code>ou=Users,dc=example</code></p>
+<p>por ej:</p>
+<ul>
+<li><code>ou=officeA,ou=Users,dc=example</code></li>
+<li><code>ou=officeB,ou=Users,dc=example</code></li>
+<li><code>ou=officeC,ou=Users,dc=example</code></li>
+</ul>
+<p>Espero haberte ahorrado el martirio de tener que lidiar con OpenLDAP, Slapd y Google Workspace &lt;3</p>
+
+    
+  </div>
+
+  
+
+  
+  
+
+<div class="single-pagination">
+    <hr />
+
+    <div class="flex">
+
+        <div class="single-pagination-prev">
+            
+            <div class="single-pagination-container-prev">
+                <div class="single-pagination-text">←</div>
+                <div class="single-pagination-text">
+                    <a href="/posts/eks-vpc-cni/">
+                        EKS y superar el limite de ips por nodo configurando VPC CNI Plugin
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="single-pagination-next">
+            
+        </div>
+
+    </div>
+
+    <hr />
+</div>
+
+
+
+  
+
+  
+
+  
+  <div class="back-to-top">
+    <a href="#top">
+      back to top
+    </a>
+  </div>
+  
+
+</div>
+
+
+      </main>
+    </div>
+
+    <footer>
+      
+
+    
+    <p>Powered by
+        <a href="https://gohugo.io/">Hugo</a>
+        and
+        <a href="https://github.com/tomfran/typo">tomfran/typo</a>
+    </p>
+    
+    
+    
+
+
+
+    </footer>
+    
+  </body>
+
+  <script>
+
+  function isAuto() {
+    return document.body.classList.contains("auto");
+  }
+
+  function setTheme() {
+    if (!isAuto()) {
+      return
+    }
+
+    document.body.classList.remove("auto");
+    let cls = "light";
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      cls = "dark";
+    }
+
+    document.body.classList.add(cls);
+  }
+
+  function invertBody() {
+    document.body.classList.toggle("dark");
+    document.body.classList.toggle("light");
+  }
+
+  if (isAuto()) {
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(invertBody);
+  }
+
+  setTheme();
+
+</script>
+
+</html>

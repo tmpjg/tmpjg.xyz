@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en"
+  dir="ltr">
+
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+
+
+<link rel="icon" type="image/ico" href="http://localhost:1313//favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313//favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313//favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="http://localhost:1313//android-chrome-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="http://localhost:1313//apple-touch-icon.png">
+
+<meta name="description" content=""/>
+
+<title>
+    
+    Being an `Acceptable` `Technical Leader` in Infrastructure | Jeronimo Gonzalez [tmpjg]
+    
+</title>
+
+<link rel="canonical" href="http://localhost:1313/en/posts/being-acceptable-technical-leader-infrastructure/"/>
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/assets/combined.min.a6824bbee0d90d5af09fed9b70395ce7076b615e315037455d903314e96ef91b.css" media="all">
+
+
+
+
+
+  </head>
+
+  
+
+  
+  
+  
+
+  <body class="dark">
+
+    <div class="content">
+      <header>
+        
+
+<div class="header">
+
+    
+
+    <h1 class="header-title">Jeronimo Gonzalez [tmpjg]</h1>
+
+    <div class="flex">
+        
+
+        
+        
+      
+        <p class="small ">
+            <a href="/en" >
+                /home
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/en/posts" >
+                /posts
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/en/about" >
+                /about
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/" >
+                /(es)
+            </a>
+        </p>
+        
+        
+    </div>
+
+    
+
+</div>
+
+      </header>
+
+      <main class="main">
+        
+
+
+
+
+
+<div class="breadcrumbs">
+    
+    <a href="/en/">Jeronimo Gonzalez [tmpjg]</a>
+    <span class="breadcrumbs-separator"> > </span>
+    
+    <a href="/en/posts/">Posts</a>
+    <span class="breadcrumbs-separator"> > </span>
+    
+    <a class="breadcrumbs-current" href="/en/posts/being-acceptable-technical-leader-infrastructure/">Being an `Acceptable` `Technical Leader` in Infrastructure</a>
+</div>
+
+
+
+<div >
+
+  <div class="single-intro-container">
+
+    
+
+    <h1 class="single-title">Being an `Acceptable` `Technical Leader` in Infrastructure</h1>
+    
+    <p class="single-summary">What does it mean to be a technical leader in infrastructure, and what are some common misconceptions?</p>
+    
+
+    
+
+    <p class="single-readtime">
+      
+      
+      
+      <time datetime="2024-10-19T21:56:28-03:00">October 19, 2024</time>
+      
+
+      
+    </p>
+
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  <div class="single-content">
+    <p>If you&rsquo;ve been in the industry for at least 10 years and have specifically chosen IT or Infrastructure as your field, we’ll likely connect quickly. We’ve witnessed the tech boom rise from nothing, whether by working within it or observing it from another sector, where we often went unnoticed, sometimes alongside the most veiled disdain from users. Their treatment reflected what they believed we were: a <code>necessary evil.</code><br>
+Those generic desktop computers, with limited internet access and countless user restrictions, occasionally demanded attention. Whether due to user negligence (e.g., a disconnected mouse) or aging hardware (e.g., a hard drive on its last legs), calls would come, and we had to respond, almost as if we were the culprits of every issue.</p>
+<p>Today, these anecdotes, reminiscent of <a href="https://en.wikipedia.org/wiki/The_IT_Crowd">The IT Crowd</a>, are mostly in the past. Any workplace aiming to generate capital efficiently and orderly now understands the importance of IT departments and tends to consider the area’s strategy. This is especially noticeable in modern tech companies, where, although IT may occasionally be seen as an internal adversary, recommendations are usually taken seriously, and the value of investing in infrastructure is quickly realized.</p>
+<p>The problem is that as we <code>rose from the basement,</code> infrastructure professionals didn’t organize as well as programmers. For us, fewer organic frameworks emerged to structure and simplify our work.</p>
+<p>Over the past year, I’ve embarked on a personal journey toward and within the role of <code>Technical Leader</code> (a title that can vary greatly in name and responsibilities) in a small infrastructure team within a <code>software factory</code> managing internal infrastructure and supporting both on-premises and cloud-based client systems. I thought it might be useful to jot down a few points for my own future reference or for any other <code>infra</code> professional in a similar position:</p>
+<h3 id="1-learn-to-delegate">1) Learn to Delegate</h3>
+<p>It’s the most cliché advice you’ll hear on this topic, and also the hardest for me to implement. Still, I’m convinced that the only way for things to work smoothly without resulting in mental burnout is through delegation. What’s often not mentioned is that <strong>other people are not direct extensions of you</strong> and will not perform tasks exactly as you would. It’s tough but essential to accept this sooner or later to appreciate others&rsquo; work. The best thing we can do is lay out well-documented groundwork to guide them and be clear in our requests.</p>
+<h3 id="2-document-the-past-and-the-future">2) Document the Past and the Future</h3>
+<p>If we’re in a position where a technical team depends on us for proper functioning under both expected and unexpected circumstances, <strong>it’s imperative to write documentation for the past and the future!</strong><br>
+Learning to document is now fundamental, as it’s key to effective delegation. This often-overlooked task, sidelined by the urgency of capital and business, will help the team understand past actions and significantly improve response capabilities (the past). Simultaneously, we can shape team actions within a declared framework of standards or norms, relieving us of the burden of addressing every minor decision in a process (e.g., &ldquo;What name should we give this server?!&rdquo;).<br>
+It’s crucial to tailor documentation to the audience’s seniority level. Every line should be useful; extra information can be found online. Our manuals should be something the team wants to read.</p>
+<h3 id="3-users-are-like-that">3) Users Are Like That&hellip;</h3>
+<p>When a user contacts us, two possibilities exist: a) They need something, or b) Something broke. Naturally, there are two common tones in these requests. When a user complains about a failure or problem, the tone is often more &ldquo;confrontational.&rdquo; Without delving into how this sometimes stems from certain users’ inability to understand anything beyond their immediate comprehension, I highly recommend prioritizing resolving the issue promptly. This benefits everyone by removing the user from the equation and improving everyone’s day.<br>
+It’s also helpful to create a discreet list of &ldquo;difficult users&rdquo; (enemies) and share it with the team to remain vigilant.</p>
+<h3 id="4-its-rarely-personal">4) It’s Rarely Personal</h3>
+<p>If the documentation is written, tasks are delegated clearly, and yet we still find that our colleagues don’t complete them correctly, the most likely explanation is that <strong>it’s not personal.</strong> It’s often just challenging to adapt to someone else’s working style. The effort we put into establishing patterns to improve the workspace may lead us to feel that issues are personal. However, in 98% of cases, they aren’t—it’s more likely that we haven’t found the best way to communicate the information.</p>
+<h3 id="5-its-just-work">5) It’s Just Work</h3>
+<p>It might seem obvious, but related to the previous point, it’s essential to internalize that, at the end of the day, this is just work. No matter where or for how much, it’s work. It’s crucial to recognize the demands that our relationship with capitalist society, the job market, and life as humans impose on us and our colleagues. It’s almost a daily obligation to make the lives of those around us as little miserable as possible with what we have. If we ever need to raise our voice or take a firm stand, it must always be directed upward, never at our colleagues.</p>
+<p>(Translated using ChatGPT)</p>
+
+    
+  </div>
+
+  
+
+  
+  
+
+<div class="single-pagination">
+    <hr />
+
+    <div class="flex">
+
+        <div class="single-pagination-prev">
+            
+            <div class="single-pagination-container-prev">
+                <div class="single-pagination-text">←</div>
+                <div class="single-pagination-text">
+                    <a href="/en/posts/eks-vpc-cni/">
+                        EKS and Overcoming Node IP Limits by Configuring the VPC CNI Plugin
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="single-pagination-next">
+            
+            <div class="single-pagination-container-next">
+                <div class="single-pagination-text">
+                    <a href="/en/posts/slapd-and-google-workspace/">
+                        Slapd (meta backend openldap) and Google Workspace
+                    </a>
+                </div>
+                <div class="single-pagination-text">→</div>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <hr />
+</div>
+
+
+
+  
+
+  
+
+  
+  <div class="back-to-top">
+    <a href="#top">
+      back to top
+    </a>
+  </div>
+  
+
+</div>
+
+
+      </main>
+    </div>
+
+    <footer>
+      
+
+    
+    <p>Powered by
+        <a href="https://gohugo.io/">Hugo</a>
+        and
+        <a href="https://github.com/tomfran/typo">tomfran/typo</a>
+    </p>
+    
+    
+    
+
+
+
+    </footer>
+    
+  </body>
+
+  <script>
+
+  function isAuto() {
+    return document.body.classList.contains("auto");
+  }
+
+  function setTheme() {
+    if (!isAuto()) {
+      return
+    }
+
+    document.body.classList.remove("auto");
+    let cls = "light";
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      cls = "dark";
+    }
+
+    document.body.classList.add(cls);
+  }
+
+  function invertBody() {
+    document.body.classList.toggle("dark");
+    document.body.classList.toggle("light");
+  }
+
+  if (isAuto()) {
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(invertBody);
+  }
+
+  setTheme();
+
+</script>
+
+</html>

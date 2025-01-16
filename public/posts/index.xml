@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Jeronimo Gonzalez [tmpjg]</title>
+    <link>https://tmpjg.xyz/posts/</link>
+    <description>Recent content in Posts on Jeronimo Gonzalez [tmpjg]</description>
+    <generator>Hugo</generator>
+    <language>es</language>
+    <lastBuildDate>Mon, 02 Dec 2024 19:24:49 -0300</lastBuildDate>
+    <atom:link href="https://tmpjg.xyz/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Slapd (meta backend openldap) y Google Workspace</title>
+      <link>https://tmpjg.xyz/posts/slapd-y-google-workspace/</link>
+      <pubDate>Mon, 02 Dec 2024 19:24:49 -0300</pubDate>
+      <guid>https://tmpjg.xyz/posts/slapd-y-google-workspace/</guid>
+      <description>Organizar un directorio LDAP en Google Workspace con Slapd (meta backend openldap)</description>
+    </item>
+    <item>
+      <title>EKS y superar el limite de ips por nodo configurando VPC CNI Plugin</title>
+      <link>https://tmpjg.xyz/posts/eks-vpc-cni/</link>
+      <pubDate>Mon, 30 Sep 2024 18:55:59 -0300</pubDate>
+      <guid>https://tmpjg.xyz/posts/eks-vpc-cni/</guid>
+      <description>Como superar el limite de ips que establece AWS en EKS?.</description>
+    </item>
+  </channel>
+</rss>

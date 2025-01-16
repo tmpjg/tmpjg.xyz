@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Jeronimo Gonzalez [tmpjg]</title>
+    <link>https://tmpjg.xyz/tags/</link>
+    <description>Recent content in Tags on Jeronimo Gonzalez [tmpjg]</description>
+    <generator>Hugo</generator>
+    <language>es</language>
+    <lastBuildDate>Mon, 02 Dec 2024 19:24:49 -0300</lastBuildDate>
+    <atom:link href="https://tmpjg.xyz/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Google</title>
+      <link>https://tmpjg.xyz/tags/google/</link>
+      <pubDate>Mon, 02 Dec 2024 19:24:49 -0300</pubDate>
+      <guid>https://tmpjg.xyz/tags/google/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Infraestructura</title>
+      <link>https://tmpjg.xyz/tags/infraestructura/</link>
+      <pubDate>Mon, 02 Dec 2024 19:24:49 -0300</pubDate>
+      <guid>https://tmpjg.xyz/tags/infraestructura/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LDAP</title>
+      <link>https://tmpjg.xyz/tags/ldap/</link>
+      <pubDate>Mon, 02 Dec 2024 19:24:49 -0300</pubDate>
+      <guid>https://tmpjg.xyz/tags/ldap/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Trabajo</title>
+      <link>https://tmpjg.xyz/tags/trabajo/</link>
+      <pubDate>Mon, 02 Dec 2024 19:24:49 -0300</pubDate>
+      <guid>https://tmpjg.xyz/tags/trabajo/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AWS</title>
+      <link>https://tmpjg.xyz/tags/aws/</link>
+      <pubDate>Mon, 30 Sep 2024 18:55:59 -0300</pubDate>
+      <guid>https://tmpjg.xyz/tags/aws/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>EKS</title>
+      <link>https://tmpjg.xyz/tags/eks/</link>
+      <pubDate>Mon, 30 Sep 2024 18:55:59 -0300</pubDate>
+      <guid>https://tmpjg.xyz/tags/eks/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kubernetes</title>
+      <link>https://tmpjg.xyz/tags/kubernetes/</link>
+      <pubDate>Mon, 30 Sep 2024 18:55:59 -0300</pubDate>
+      <guid>https://tmpjg.xyz/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

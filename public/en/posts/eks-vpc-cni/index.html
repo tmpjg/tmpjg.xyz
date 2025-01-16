@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en"
+  dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+
+
+<link rel="icon" type="image/ico" href="https://tmpjg.xyz//favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://tmpjg.xyz//favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://tmpjg.xyz//favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="https://tmpjg.xyz//android-chrome-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://tmpjg.xyz//apple-touch-icon.png">
+
+<meta name="description" content="Learn how to overcome the default IP limits set by AWS on EKS."/>
+
+<title>
+    
+    EKS and Overcoming Node IP Limits by Configuring the VPC CNI Plugin | Jeronimo Gonzalez [tmpjg]
+    
+</title>
+
+<link rel="canonical" href="https://tmpjg.xyz/en/posts/eks-vpc-cni/"/>
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/assets/combined.min.a6824bbee0d90d5af09fed9b70395ce7076b615e315037455d903314e96ef91b.css" media="all">
+
+
+
+
+
+
+
+
+
+  </head>
+
+  
+
+  
+  
+  
+
+  <body class="dark">
+
+    <div class="content">
+      <header>
+        
+
+<div class="header">
+
+    
+
+    <h1 class="header-title">Jeronimo Gonzalez [tmpjg]</h1>
+
+    <div class="flex">
+        
+
+        
+        
+      
+        <p class="small ">
+            <a href="/en" >
+                /home
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/en/posts" >
+                /posts
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/en/about" >
+                /about
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/en/tags" >
+                /tags
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/" >
+                /(es)
+            </a>
+        </p>
+        
+        
+    </div>
+
+    
+
+</div>
+
+      </header>
+
+      <main class="main">
+        
+
+
+
+
+
+<div class="breadcrumbs">
+    
+    <a href="/en/">Jeronimo Gonzalez [tmpjg]</a>
+    <span class="breadcrumbs-separator"> > </span>
+    
+    <a href="/en/posts/">Posts</a>
+    <span class="breadcrumbs-separator"> > </span>
+    
+    <a class="breadcrumbs-current" href="/en/posts/eks-vpc-cni/">EKS and Overcoming Node IP Limits by Configuring the VPC CNI Plugin</a>
+</div>
+
+
+
+<div >
+
+  <div class="single-intro-container">
+
+    
+
+    <h1 class="single-title">EKS and Overcoming Node IP Limits by Configuring the VPC CNI Plugin</h1>
+    
+    <p class="single-summary">How to overcome the IP limit imposed by AWS on EKS?</p>
+    
+
+    
+
+    <p class="single-readtime">
+      
+      
+      
+      <time datetime="2024-09-30T18:55:59-03:00">September 30, 2024</time>
+      
+
+      
+    </p>
+
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  <div class="single-content">
+    <h2 id="problem">Problem</h2>
+<p>When setting up a Kubernetes cluster on EKS for the first time, you’ll likely encounter a pod limit issue due to node IP restrictions!<br>
+This limit depends on the instance type and the number of ENIs it can handle (+ENIs = +IPs). However, if you need to use smaller instances (to reduce costs) and deploy many pods (with low resource consumption), it’s beneficial to increase this default limit.</p>
+<h3 id="why">Why?</h3>
+<p>The documentation for <a href="https://github.com/aws/amazon-vpc-cni-k8s">amazon-vpc-cni-k8s</a> explains (<a href="https://github.com/aws/amazon-vpc-cni-k8s/blob/master/misc/eni-max-pods.txt">ENI + IP limits per instance and calculations</a>) how to determine the limit.</p>
+<p>For instance, with a <code>t3a.medium</code> instance, you are limited to a maximum of <strong>17 pods</strong> because:</p>
+<ul>
+<li>It supports up to 3 network interfaces (ENIs).</li>
+<li>Each ENI can have up to 6 IP addresses, but 1 is reserved for the instance itself.</li>
+</ul>
+<p>The calculation is as follows:</p>
+<ul>
+<li>2 ENIs available for pods, with 5 usable IP addresses per ENI.</li>
+<li>Total of (2 ENIs x 5 IPs) = 10 IP addresses for additional pods.</li>
+</ul>
+<p>Including the primary IP, there are 17 total IP addresses: 1 for the instance and 16 for the pods.</p>
+<h3 id="solution">Solution</h3>
+<p>The simplest and quickest solution is to install the <strong>amazon-vpc-cni-k8s</strong> plugin and configure it to enable <strong>prefix delegation</strong> for ENIs. This allows the addition of <code>/28</code> ranges (14 usable IP addresses out of 16) to each ENI assigned to an instance. For a <em>t3a.medium</em>, this configuration increases the capacity to <strong>42 pods</strong> based on the previous calculation.</p>
+<p>When applying this configuration, <strong>IT IS NECESSARY</strong> to delete and recreate your node groups so they adopt the changes. EKS will then display the standard Kubernetes limit of 110 pods per node.</p>
+<h2 id="installation-and-configuration">Installation and Configuration</h2>
+<ol>
+<li>
+<p><strong>Log in to the AWS Console</strong></p>
+</li>
+<li>
+<p><strong>Select the EKS Cluster</strong></p>
+</li>
+<li>
+<p><strong>Access the Add-ons Page</strong>: In the left-hand navigation panel, click on &ldquo;Add-ons.&rdquo; You’ll see a list of installed add-ons and an option to add a new one.</p>
+</li>
+<li>
+<p><strong>Add the VPC CNI Add-on</strong>: Click the &ldquo;Add Add-on&rdquo; button. Under the &ldquo;Add-on&rdquo; section, select Amazon VPC CNI. Choose the latest version or your desired version under &ldquo;Add-on Version.&rdquo; Click Next.</p>
+</li>
+<li>
+<p><strong>Configure Add-on Parameters</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  &#34;env&#34;: {
+</span></span><span style="display:flex;"><span>    &#34;ENABLE_PREFIX_DELEGATION&#34;: <span style="color:#666;font-style:italic">&#34;true&#34;</span>,
+</span></span><span style="display:flex;"><span>    &#34;MINIMUM_IP_TARGET&#34;: <span style="color:#666;font-style:italic">&#34;5&#34;</span>,
+</span></span><span style="display:flex;"><span>    &#34;WARM_ENI_TARGET&#34;: <span style="color:#666;font-style:italic">&#34;1&#34;</span>,
+</span></span><span style="display:flex;"><span>    &#34;WARM_IP_TARGET&#34;: <span style="color:#666;font-style:italic">&#34;2&#34;</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li><strong>ENABLE_PREFIX_DELEGATION:</strong> Enables prefix delegation in subnets, allowing efficient allocation of IP blocks for pods.</li>
+<li><strong>MINIMUM_IP_TARGET:</strong> Sets the minimum number of IP addresses that must remain available on the node for new pods.</li>
+<li><strong>WARM_ENI_TARGET:</strong> Specifies how many additional ENIs should be kept &ldquo;warm&rdquo; (ready for rapid IP allocation).</li>
+<li><strong>WARM_IP_TARGET:</strong> Defines how many extra IP addresses should be kept &ldquo;warm&rdquo; on each ENI for quick pod scaling (e.g., 2).</li>
+</ul>
+</li>
+<li>
+<p><strong>Review and Confirm</strong></p>
+</li>
+<li>
+<p><strong>Verify the Installation</strong>: After adding the add-on, verify its proper installation and that the pods are running. If a node group was already created, it must be deleted and recreated to adopt the changes.</p>
+</li>
+</ol>
+<p>(Translated using ChatGPT)</p>
+
+    
+  </div>
+
+  
+
+  
+  
+
+<div class="single-pagination">
+    <hr />
+
+    <div class="flex">
+
+        <div class="single-pagination-prev">
+            
+        </div>
+
+        <div class="single-pagination-next">
+            
+            <div class="single-pagination-container-next">
+                <div class="single-pagination-text">
+                    <a href="/en/posts/slapd-and-google-workspace/">
+                        Slapd (meta backend openldap) and Google Workspace
+                    </a>
+                </div>
+                <div class="single-pagination-text">→</div>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <hr />
+</div>
+
+
+
+  
+
+  
+
+  
+  <div class="back-to-top">
+    <a href="#top">
+      back to top
+    </a>
+  </div>
+  
+
+</div>
+
+
+      </main>
+    </div>
+
+    <footer>
+      
+
+    
+    <p>Powered by
+        <a href="https://gohugo.io/">Hugo</a>
+        and
+        <a href="https://github.com/tomfran/typo">tomfran/typo</a>
+    </p>
+    
+    
+    
+
+
+
+    </footer>
+    
+  </body>
+
+  <script>
+
+  function isAuto() {
+    return document.body.classList.contains("auto");
+  }
+
+  function setTheme() {
+    if (!isAuto()) {
+      return
+    }
+
+    document.body.classList.remove("auto");
+    let cls = "light";
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      cls = "dark";
+    }
+
+    document.body.classList.add(cls);
+  }
+
+  function invertBody() {
+    document.body.classList.toggle("dark");
+    document.body.classList.toggle("light");
+  }
+
+  if (isAuto()) {
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(invertBody);
+  }
+
+  setTheme();
+
+</script>
+
+</html>
